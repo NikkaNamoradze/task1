@@ -1,5 +1,4 @@
 import argparse
-import logging
 from os import getenv
 
 import boto3
@@ -7,12 +6,6 @@ from botocore.exceptions import ClientError
 from dotenv import load_dotenv
 
 load_dotenv()
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-)
-logger = logging.getLogger(__name__)
 
 
 def init_client():
@@ -44,7 +37,7 @@ def create_bucket(client, bucket_name, region=None):
         )
         return True
     except ClientError as e:
-        logger.error("Failed to create bucket: %s", e)
+        print(e)
         return False
 
 
