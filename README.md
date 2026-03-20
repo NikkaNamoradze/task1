@@ -5,9 +5,16 @@ CLI program that takes a bucket name as an argument, checks if it exists, and cr
 ## Setup
 
 ```bash
-pip install -r requirements.txt
-cp .env.example .env
-# Fill in your AWS credentials in .env
+pip install boto3 python-dotenv
+```
+
+შექმენით `.env` ფაილი პროექტის root-ში:
+
+```
+aws_access_key_id=YOUR_ACCESS_KEY_ID
+aws_secret_access_key=YOUR_SECRET_ACCESS_KEY
+aws_session_token=YOUR_SESSION_TOKEN
+aws_region_name=us-west-2
 ```
 
 ## Usage
@@ -16,19 +23,35 @@ cp .env.example .env
 python main.py <bucket_name> [--region us-west-2]
 ```
 
-### Examples
+## Testing
+
+### 1. ახალი bucket-ის შექმნა (bucket არ არსებობს)
 
 ```bash
-# Check and create bucket
-python main.py my-unique-bucket
-
-# Specify region
-python main.py my-unique-bucket --region eu-west-1
+python main.py my-test-bucket-12345
 ```
 
-## How it works
+მოსალოდნელი output:
+```
+Bucket 'my-test-bucket-12345' does not exist. Creating...
+Bucket 'my-test-bucket-12345' created successfully.
+```
 
-1. Initializes S3 client using credentials from `.env`
-2. Checks if the bucket exists using `head_bucket`
-3. If it exists — prints that the bucket already exists
-4. If it doesn't exist — creates it and confirms
+### 2. არსებული bucket-ის შემოწმება (bucket უკვე არსებობს)
+
+გაუშვით იგივე ბრძანება მეორეჯერ:
+
+```bash
+python main.py my-test-bucket-12345
+```
+
+მოსალოდნელი output:
+```
+Bucket 'my-test-bucket-12345' already exists.
+```
+
+### 3. სხვა რეგიონით შექმნა
+
+```bash
+python main.py my-eu-bucket-12345 --region eu-west-1
+```
